@@ -1,10 +1,10 @@
-# BigraphER into Rocq
+# BigraphER → Rocq
 
 Traducteur qui part d'une description de bigraphe écrite dans un langage texte simple (`.big`, inspiré de la syntaxe de [BigraphER](https://github.com/bigraph-tools/BigraphER)) et produit un fichier Rocq exploitable avec [BiCoq](https://gitlab.isae-supaero.fr/c.marcon/bicoq), la formalisation des bigraphes de Milner développée par Cécile Marcon. Le but : éviter d'avoir à réécrire chaque bigraphe à la main dans la syntaxe de BiCoq, où une structure de taille réaliste peut demander plusieurs centaines de lignes.
 
 ## Architecture
 
-Contrairement à un transpilateur externe écrit en OCaml, l'intégralité de la chaîne de traduction (lexer, parser, arbre syntaxique, imprimeur) est écrite et vérifiée en Rocq, puis extraite vers OCaml pour obtenir un exécutable :
+Contrairement à un transpilateur externe écrit en OCaml, l'intégralité de la chaîne de traduction — lexer, parser, arbre syntaxique, imprimeur — est écrite et vérifiée en Rocq, puis extraite vers OCaml pour obtenir un exécutable :
 
 ```
 .big --> Lexer.v --> BigParser.v(y) --> BigAst.v --> PrintV.v --> .v
@@ -15,7 +15,7 @@ Contrairement à un transpilateur externe écrit en OCaml, l'intégralité de la
 | `Lexer.v` | tokenise le fichier source `.big` |
 | `BigParser.vy` | grammaire Menhir (backend Rocq), produit un `big_ast` (`BigAst.v`) |
 | `BigAst.v` | arbre syntaxique : un constructeur par forme du langage (ion, composition, tensor, nest, par, ppar, id, closure, substitution) |
-| `PrintV.v` | **source de vérité de la génération** : parcourt l'AST et imprime le texte Rocq final ; seul fichier à éditer pour changer ce qui est généré |
+| `PrintV.v` | **source de vérité de la génération** — parcourt l'AST et imprime le texte Rocq final ; seul fichier à éditer pour changer ce qui est généré |
 | `Translate.v` | assemble les étapes précédentes en `Translate.big2v : string -> string` |
 | `Extract.v` | extrait `big2v` vers OCaml (`big2v.ml`/`.mli` — générés, à ne jamais éditer à la main) |
 | `driver.ml` | CLI minimale : lit un `.big`, appelle `Big2v.big2v`, écrit le `.v` |
@@ -28,7 +28,7 @@ Contrairement à un transpilateur externe écrit en OCaml, l'intégralité de la
 - Menhir, avec son backend Rocq (`MenhirLib`)
 - dune
 - Pour compiler les `.v` générés : un checkout de [BiCoq](https://gitlab.isae-supaero.fr/c.marcon/bicoq), avec `MakeBig.v` (le prélude de preuve : `make_ion`, `make_atom`, lemmes de cardinalité) déposé dans son `src/`
-- BiCoq
+- mathcomp (`all_boot`, `all_order`), dépendance de BiCoq
 
 ## Compilation
 
@@ -63,18 +63,18 @@ La brique de base d'une expression est l'**ion** : un contrôle appliqué à une
 | `\|` | produit de fusion |
 | `\|\|` | produit parallèle |
 
-**Ces cinq opérateurs n'ont pas de priorité entre eux** : une expression s'évalue de gauche à droite, dans l'ordre où elle est écrite (`A . B * C` = `(A . B) * C`) ; seules des parenthèses explicites imposent un autre regroupement.
+**Ces cinq opérateurs n'ont pas de priorité entre eux** : une expression s'évalue de gauche à droite, dans l'ordre où elle est écrite (`A . B * C` = `(A . B) * C`) ; seules des parenthèses explicites imposent un autre regroupement. C'est une simplification assumée par rapport à la vraie précédence de BigraphER (où `.` lie plus fort que les produits).
 
 S'y ajoutent :
 - l'identité — `id`, `id(n)`, `id(n, {x,y})`
 - la fermeture d'un nom — `/x(expr)`, ou `/x` seule
 - la substitution — `nom/{x,y}(expr)`, qui réexpose un ensemble de noms internes sous un nom externe unique
 
-Un nom introduit par une closure (`/x`) est interne ; tout autre nom est externe (convention héritée de BigraphERe).
+Un nom introduit par une closure (`/x`) est interne ; tout autre nom est externe (convention héritée de BigraphER, qui ne distingue les deux qu'à travers ce mécanisme de closure).
 
 ## Ce que produit le générateur
 
-Le fichier `.v` s'organise en un en-tête (imports, ouverture de module), trois lemmes génériques de support, un **pool de noms partagé** : tous les noms de liens du fichier sont générés d'un coup (`new_disjoint_infT_list`) et désignés par leur position dans ce pool, ce qui garantit que deux bigraphes du fichier partageant un nom pointent vers le même `name` Rocq — puis le corps : chaque nœud de l'AST est imprimé sous un nom frais `bigInterN` ; le bigraphe déclaré par `big nom = ...;` reçoit en plus un alias `Definition nom := bigInterN.`.
+Le fichier `.v` s'organise en un en-tête (imports, ouverture de module), trois lemmes génériques de support, un **pool de noms partagé** — tous les noms de liens du fichier sont générés d'un coup (`new_disjoint_infT_list`) et désignés par leur position dans ce pool, ce qui garantit que deux bigraphes du fichier partageant un nom pointent vers le même `name` Rocq — puis le corps : chaque nœud de l'AST est imprimé sous un nom frais `bigInterN` ; le bigraphe déclaré par `big nom = ...;` reçoit en plus un alias `Definition nom := bigInterN.`.
 
 ## Détection d'erreur précoce
 
@@ -95,7 +95,7 @@ Chaque opérateur composé génère une ou deux obligations de preuve :
 
 ## Tests
 
-`tests/` contient des `.big` couvrant les opérateurs, plus des cas aux limites dédiés : `l_id_neutral`, `l_closure_twice`, `l_comp_ion_ion`, `l_nest_atom`, `l_dup_names`, `l_unknown_ctrl`, `l_empty`, `l_closure_order`, `l_arity_mismatch`.
+`tests/` contient des paires `.big`/`.v` couvrant les opérateurs, plus des cas aux limites dédiés : `l_id_neutral`, `l_closure_twice`, `l_comp_ion_ion`, `l_nest_atom`, `l_dup_names`, `l_unknown_ctrl`, `l_empty`, `l_closure_order`, `l_arity_mismatch`.
 
 ## Limites connues
 
@@ -105,4 +105,4 @@ Chaque opérateur composé génère une ou deux obligations de preuve :
 
 ## Historique
 
-Un premier transpilateur, écrit directement en OCaml (analyse lexicale et syntaxique manuelle, toutes les preuves laissées `Admitted`), avait été développé par Balazs Palotas et l'équipe (voir *Accélérer la formalisation des bigraphes*, Palotas). Ce dépôt reprend le même objectif avec une architecture différente : la chaîne de traduction est écrite et vérifiée en Rocq puis extraite, ce qui permet la détection d'erreur précoce et l'automatisation partielle des preuves décrites ci-dessus.
+Un premier transpilateur, écrit directement en OCaml (analyse lexicale et syntaxique manuelle, toutes les preuves laissées `Admitted`), avait été développé par Balazs Palotas et l'équipe (voir *Accélérer la formalisation des bigraphes*, Palotas et al.). Ce dépôt reprend le même objectif avec une architecture différente : la chaîne de traduction est écrite et vérifiée en Rocq puis extraite, ce qui permet la détection d'erreur précoce et l'automatisation partielle des preuves décrites ci-dessus.

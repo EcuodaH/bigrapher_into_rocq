@@ -1,0 +1,8 @@
+*.vo
+*.vo[ks]
+*.glob
+*.aux
+_build/
+translator/BigParser.v
+translator/big2v.ml
+translator/big2v.mli
