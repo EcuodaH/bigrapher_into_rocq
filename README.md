@@ -4,7 +4,7 @@ Traducteur qui part d'une description de bigraphe écrite dans un langage texte 
 
 ## Architecture
 
-Contrairement à un transpilateur externe écrit en OCaml, l'intégralité de la chaîne de traduction — lexer, parser, arbre syntaxique, imprimeur — est écrite et vérifiée en Rocq, puis extraite vers OCaml pour obtenir un exécutable :
+Contrairement à un transpilateur externe écrit en OCaml, l'intégralité de la chaîne de traduction (lexer, parser, arbre syntaxique, imprimeur) est écrite et vérifiée en Rocq, puis extraite vers OCaml pour obtenir un exécutable :
 
 ```
 .big --> Lexer.v --> BigParser.v(y) --> BigAst.v --> PrintV.v --> .v
@@ -28,19 +28,23 @@ Contrairement à un transpilateur externe écrit en OCaml, l'intégralité de la
 - Menhir, avec son backend Rocq (`MenhirLib`)
 - dune
 - Pour compiler les `.v` générés : un checkout de [BiCoq](https://gitlab.isae-supaero.fr/c.marcon/bicoq), avec `MakeBig.v` (le prélude de preuve : `make_ion`, `make_atom`, lemmes de cardinalité) déposé dans son `src/`
-- mathcomp (`all_boot`, `all_order`), dépendance de BiCoq
+
+Le traducteur lui-même (`translator/`) ne dépend d'aucun fichier de BiCoq : `-R . BigTool` suffit.
 
 ## Compilation
 
 ```bash
 cd translator
-make -f Makefile.tool   # compile la chaîne Rocq, régénère big2v.ml/.mli via Extract.v
-dune build               # compile le driver OCaml
+make        # génère BigParser.v (Menhir), compile la chaîne Rocq, produit driver.exe
 ```
+
+`make clean` supprime tout ce qui est généré (`*.vo`, `BigParser.v`, `big2v.ml`/`.mli`, `_build/`).
 
 ## Utilisation
 
 ```bash
+make run IN=tests/deadlock.big OUT=tests/deadlock.v
+# ou, une fois compilé :
 dune exec ./driver.exe -- tests/deadlock.big tests/deadlock.v
 ```
 
@@ -70,11 +74,11 @@ S'y ajoutent :
 - la fermeture d'un nom — `/x(expr)`, ou `/x` seule
 - la substitution — `nom/{x,y}(expr)`, qui réexpose un ensemble de noms internes sous un nom externe unique
 
-Un nom introduit par une closure (`/x`) est interne ; tout autre nom est externe (convention héritée de BigraphER, qui ne distingue les deux qu'à travers ce mécanisme de closure).
+Un nom introduit par une closure (`/x`) est interne ; tout autre nom est externe (convention héritée de BigraphER).
 
 ## Ce que produit le générateur
 
-Le fichier `.v` s'organise en un en-tête (imports, ouverture de module), trois lemmes génériques de support, un **pool de noms partagé** — tous les noms de liens du fichier sont générés d'un coup (`new_disjoint_infT_list`) et désignés par leur position dans ce pool, ce qui garantit que deux bigraphes du fichier partageant un nom pointent vers le même `name` Rocq — puis le corps : chaque nœud de l'AST est imprimé sous un nom frais `bigInterN` ; le bigraphe déclaré par `big nom = ...;` reçoit en plus un alias `Definition nom := bigInterN.`.
+Le fichier `.v` s'organise en un en-tête (imports, ouverture de module), trois lemmes génériques de support, un **pool de noms partagé** : tous les noms de liens du fichier sont générés d'un coup (`new_disjoint_infT_list`) et désignés par leur position dans ce pool, ce qui garantit que deux bigraphes du fichier partageant un nom pointent vers le même `name` Rocq — puis le corps : chaque nœud de l'AST est imprimé sous un nom frais `bigInterN` ; le bigraphe déclaré par `big nom = ...;` reçoit en plus un alias `Definition nom := bigInterN.`.
 
 ## Détection d'erreur précoce
 
@@ -95,7 +99,7 @@ Chaque opérateur composé génère une ou deux obligations de preuve :
 
 ## Tests
 
-`tests/` contient des paires `.big`/`.v` couvrant les opérateurs, plus des cas aux limites dédiés : `l_id_neutral`, `l_closure_twice`, `l_comp_ion_ion`, `l_nest_atom`, `l_dup_names`, `l_unknown_ctrl`, `l_empty`, `l_closure_order`, `l_arity_mismatch`.
+`tests/` contient des `.big` couvrant les opérateurs, plus des cas aux limites dédiés : `l_id_neutral`, `l_closure_twice`, `l_comp_ion_ion`, `l_nest_atom`, `l_dup_names`, `l_unknown_ctrl`, `l_empty`, `l_closure_order`, `l_arity_mismatch`.
 
 ## Limites connues
 

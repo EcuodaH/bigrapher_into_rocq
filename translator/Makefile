@@ -1,3 +1,9 @@
+# Compile le pipeline .big -> .v et produit l'exécutable driver.
+#
+# Le traducteur ne dépend d'aucun fichier de BiCoq (voir README.md) : pas
+# besoin de coq_makefile ni de _CoqProject, quelques appels directs à
+# `rocq c` dans l'ordre des dépendances suffisent.
+
 ROCQ  := rocq c -R . BigTool
 VFILES := BigAst.v BigParser.v PrintV.v Lexer.v Translate.v Extract.v
 
