@@ -1,5 +1,4 @@
-# ATTENTION memoire : ne pas compiler sans limite (cf. discussion, OOM > 6 Go).
-
+# Fihcier qui a permis la localisation de la perte memoire dans le cockpit, fonctionne normalement maintenant
 atomic ctrl A = 1;
 atomic ctrl B = 1;
 atomic ctrl C = 1;
