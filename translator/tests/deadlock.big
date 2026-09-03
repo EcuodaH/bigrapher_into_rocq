@@ -1,0 +1,8 @@
+atomic ctrl Fork = 1;
+ctrl Philosopher = 2;
+atomic ctrl Thinking = 0;
+
+big deadlock =
+  Philosopher{a,b}.(Fork{a} | Thinking);
+
+#exemple tiré de birgrapher, compile proprement

@@ -1,0 +1,8 @@
+# ATTENTION memoire : ne pas compiler sans limite (cf. discussion, OOM > 6 Go).
+
+atomic ctrl A = 1;
+atomic ctrl B = 1;
+atomic ctrl C = 1;
+atomic ctrl D = 1;
+
+big double_merge = (A{v} | B{w}) | (C{y} | D{z});

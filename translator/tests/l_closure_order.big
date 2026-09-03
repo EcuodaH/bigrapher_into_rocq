@@ -1,0 +1,6 @@
+atomic ctrl A = 1;
+
+big ok_order = A{x} + /y;
+big bad_order = /y + A{x};
+
+#test aux limites, erreur d'ordre détectée à la compilation pour l'instant

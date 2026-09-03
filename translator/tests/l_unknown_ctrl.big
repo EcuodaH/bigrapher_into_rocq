@@ -1,0 +1,5 @@
+ctrl A = 1;
+
+big unknown = Ghost{x};
+
+#test aux limite, détecté pendant le driver

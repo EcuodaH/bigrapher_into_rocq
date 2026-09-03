@@ -1,0 +1,6 @@
+ctrl A = 1;
+ctrl B = 1;
+
+big bad_comp = A{x} * B{x};
+
+#test aux limites, échoue côté rocq normalement

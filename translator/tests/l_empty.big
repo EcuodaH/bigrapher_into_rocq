@@ -1,0 +1,3 @@
+ctrl A = 1;
+
+#test aux limites, compile normalement

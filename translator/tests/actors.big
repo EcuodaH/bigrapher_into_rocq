@@ -1,0 +1,8 @@
+ctrl A = 1;
+atomic ctrl M = 2;
+ctrl Snd = 0;
+
+big s0 = A{a} | M{a,v};
+big s1 = A{a} . Snd;
+
+#vrai exemple tiré de bigrapher, compile normalement

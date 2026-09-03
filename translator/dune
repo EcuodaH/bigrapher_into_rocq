@@ -1,0 +1,4 @@
+(executable
+ (name driver)
+ (modules big2v driver)
+ (flags (:standard -w -a)))

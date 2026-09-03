@@ -1,0 +1,15 @@
+ctrl A = 2;
+atomic ctrl C = 1;
+atomic ctrl D = 0;
+
+big test_ion      = A{v,w};
+big test_atom     = C{z};
+big test_id       = id(2);
+big test_closure  = /q;
+big test_nest     = A{v,w} . A{a,b};
+big test_comp     = A{v,w} * D;
+big test_tensor   = A{v,w} + C{z};
+big test_merge    = A{v,w} | C{z};
+big test_parallel = A{v,w} || C{z};
+
+#fichier de test de toutes les opérations

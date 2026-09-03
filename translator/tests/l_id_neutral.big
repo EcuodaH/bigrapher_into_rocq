@@ -1,0 +1,4 @@
+big unit_comp = id(0) * id(0);
+big id_comp = id * id;
+
+#test aux limites, commile normalement

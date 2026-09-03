@@ -1,0 +1,7 @@
+ctrl A = 5;
+ctrl B = 3;
+atomic ctrl C = 4;
+
+big many_names = A{v,w,x,y,z} | B{x,y,z};
+big many_atomic = C{p,q,r,s};
+#compile proprement

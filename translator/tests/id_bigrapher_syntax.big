@@ -1,0 +1,2 @@
+big t1 = id{x,y};
+big t2 = id(2,{x,y});

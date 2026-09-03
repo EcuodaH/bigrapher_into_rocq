@@ -1,0 +1,5 @@
+ctrl A = 2;
+
+big dup = A{x,x};
+
+#test aux limites, échoue pendant le driver

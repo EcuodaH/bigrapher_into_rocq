@@ -1,0 +1,8 @@
+ctrl A = 1;
+atomic ctrl B = 1;
+
+big comp_example = A{x} * B{y};
+big tensor_example = A{x} + B{y};
+
+#fichier faux à cause de la composition
+

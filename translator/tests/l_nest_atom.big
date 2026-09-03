@@ -1,0 +1,6 @@
+atomic ctrl A = 0;
+ctrl B = 0;
+
+big bad_nest = A . B;
+
+#test aux limite, échoue à la compiliation normalement

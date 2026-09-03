@@ -1,0 +1,6 @@
+atomic ctrl A = 1;
+
+big comp_closure = /x * A{x};
+
+#échoue normalement à la compilation car l'opération est mathémtiquement fausse 
+#mais la syntaxe est correcte

@@ -1,0 +1,4 @@
+ctrl A = 1;
+ctrl B = 1;
+
+big test_close = /y(A{x} + B{y});

@@ -1,0 +1,6 @@
+ctrl A = 1;
+
+big alone = /x;
+big hidden = A{x} + /x;
+
+#fonctionne normalement

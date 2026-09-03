@@ -1,0 +1,4 @@
+ctrl A = 1;
+ctrl B = 1;
+
+big test_sub = y/{x1,x2}(A{x1} + B{x2});

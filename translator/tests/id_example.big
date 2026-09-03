@@ -1,0 +1,6 @@
+ctrl A = 1;
+
+big with_id = A{x} * id;
+big unit = id(0);
+
+#exemple id

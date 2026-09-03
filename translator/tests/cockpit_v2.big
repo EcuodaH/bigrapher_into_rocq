@@ -1,0 +1,13 @@
+ctrl Display = 0;
+atomic ctrl Tape = 1;
+atomic ctrl Lbl  = 1;
+atomic ctrl Line = 2;
+atomic ctrl Data = 1;
+
+big cockpit_closed =
+  /pts ( /e1 (
+    ( (Display . (Tape{e1} | id))
+    | (Display . (Line{c,pts} | Lbl{e1} | id))
+    | id )
+    || (Data{p} | Data{e1} | id)
+  ) );
